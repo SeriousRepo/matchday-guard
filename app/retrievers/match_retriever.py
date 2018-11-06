@@ -31,6 +31,7 @@ class MatchesRetriever(retriever.Retriever):
             'external_identifier': match['id'],
             'duration': match['duration'].lower(),
             'stage': match['stage'].lower(),
+            'group': match['group'].lower(),
             'matchday': match['matchday'],
             'home_team_external_id': match['homeTeam']['id'],
             'away_team_external_id': match['awayTeam']['id'],
@@ -38,4 +39,5 @@ class MatchesRetriever(retriever.Retriever):
             'away_team_goals': away_team_goals,
             'status': match['status'].lower()
         }
+
         return proper_match

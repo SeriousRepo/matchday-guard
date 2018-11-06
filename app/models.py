@@ -38,6 +38,7 @@ class Match(models.Model):
     away_team_external_id = models.IntegerField()
     duration = models.CharField(max_length=50)
     stage = models.CharField(max_length=50)
+    group = models.CharField(max_length=50)
     matchday = models.IntegerField()
     status = models.CharField(max_length=50)
     home_team_goals = models.IntegerField()
