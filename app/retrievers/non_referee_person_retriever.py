@@ -3,7 +3,7 @@ import json
 from app.retrievers import retriever
 
 
-class PersonRetriever(retriever.Retriever):
+class NonRefereePersonRetriever(retriever.Retriever):
     def __init__(self):
         pass
 

@@ -6,7 +6,7 @@ from app.senders.person_sender import PersonSender
 from app.models import Person
 
 
-class PersonStorer(Storer):
+class NonRefereePersonStorer(Storer):
     def store(self, content):
         if content['role'] not in ['coach', 'player']:
             return

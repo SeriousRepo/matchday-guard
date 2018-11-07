@@ -29,3 +29,11 @@ class Person(models.Model):
 class Player(models.Model):
     internal_identifier = models.IntegerField(unique=True)
     internal_person_identifier = models.IntegerField()
+
+
+class Match(models.Model):
+    external_identifier = models.IntegerField(unique=True)
+    home_team_external_id = models.IntegerField(null=True)
+    away_team_external_id = models.IntegerField(null=True)
+    home_team_goals = models.IntegerField(null=True)
+    away_team_goals = models.IntegerField(null=True)
