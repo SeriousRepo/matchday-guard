@@ -37,3 +37,7 @@ class Match(models.Model):
     away_team_external_id = models.IntegerField(null=True)
     home_team_goals = models.IntegerField(null=True)
     away_team_goals = models.IntegerField(null=True)
+
+
+class TeamInMatch(models.Model):
+    internal_identifier = models.IntegerField(unique=True)

@@ -6,12 +6,14 @@ from app.retrievers.non_referee_person_retriever import NonRefereePersonRetrieve
 from app.retrievers.referee_person_retriever import RefereePersonRetriever
 from app.retrievers.player_retriever import PlayerRetriever
 from app.retrievers.match_retriever import MatchesRetriever
+from app.retrievers.teams_in_matches_retriever import TeamsInMatchesRetriever
 from app.storers.competition_storer import CompetitionStorer
 from app.storers.referee_person_storer import RefereePersonStorer
 from app.storers.team_storer import TeamStorer
 from app.storers.non_referee_person_storer import NonRefereePersonStorer
 from app.storers.player_storer import PlayerStorer
 from app.storers.match_storer import MatchStorer
+from app.storers.team_in_match_storer import TeamInMatchStorer
 
 
 class Scheduler:
@@ -62,3 +64,11 @@ class Scheduler:
             matches = matches_retriever.retrieve(content)
             for match in matches:
                 match_storer.store(match)
+
+    def compose_teams_in_match(self):
+        content = Match.objects.all()
+        retriever = TeamsInMatchesRetriever()
+        teams = retriever.retrieve(content)
+        storer = TeamInMatchStorer()
+        for team in teams:
+            storer.store(team)
