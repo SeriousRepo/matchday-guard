@@ -1,19 +1,20 @@
-import requests
 import json
 
 from app.storers.storer import Storer
-from app.senders.match_sender import MatchSender
+from app.connectors.matchday.connector import Connector
 from app.models import Match
 
 
 class MatchStorer(Storer):
+    __url_sufix = 'matches/'
+
     def store(self, content):
-        sender = MatchSender()
-        json_response = requests.get('https://matchday-server.herokuapp.com/matches/').content
+        connector = Connector(self.__url_sufix)
+        json_response = connector.send_get()
         endpoint_content = json.loads(json_response)
         is_inside_api = self.__is_inside_api(endpoint_content, content)
         if not is_inside_api:
-            response_content = sender.send(content)
+            response_content = connector.send_post(content)
             content['internal_identifier'] = json.loads(response_content)['id']
         self.__store_to_db(content)
 

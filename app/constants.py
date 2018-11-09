@@ -7,3 +7,7 @@ try:
 except KeyError:
     error_msg = "cannot find environment variable"
     raise ImproperlyConfigured(error_msg)
+
+
+MATCHDAY_BASE_URL = 'https://matchday-server.herokuapp.com/'
+FOOTBALL_DATA_URL = 'http://api.football-data.org/v2/'

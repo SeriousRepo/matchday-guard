@@ -1,5 +1,5 @@
 from app.models import *
-from app.connectors.connector import connect
+from app.connectors.football_data.connector import Connector
 from app.retrievers.competition_retriever import CompetitionRetriever
 from app.retrievers.team_retriever import TeamRetriever
 from app.retrievers.non_referee_person_retriever import NonRefereePersonRetriever
@@ -18,7 +18,8 @@ from app.storers.team_in_match_storer import TeamInMatchStorer
 
 class Scheduler:
     def compose_competitions(self):
-        content = connect('http://api.football-data.org/v2/competitions?plan=TIER_ONE')
+        connector = Connector()
+        content = connector.send_get('competitions?plan=TIER_ONE')
         retriever = CompetitionRetriever()
         competitions = retriever.retrieve(content)
         storer = CompetitionStorer()
@@ -28,8 +29,9 @@ class Scheduler:
     def compose_teams(self):
         retriever = TeamRetriever()
         storer = TeamStorer()
+        connector = Connector()
         for i in range(1, Competition.objects.all().count() + 1):
-            content = connect('http://api.football-data.org/v2/competitions/{}/teams'.format(Competition.objects.get(pk=i).external_identifier))
+            content = connector.send_get('competitions/{}/teams'.format(Competition.objects.get(pk=i).external_identifier))
             teams = retriever.retrieve(content)
             for team in teams:
                 storer.store(team)
@@ -37,8 +39,9 @@ class Scheduler:
     def compose_team_squads(self):
         retriever = NonRefereePersonRetriever()
         storer = NonRefereePersonStorer()
+        connector = Connector()
         for i in range(1, Team.objects.all().count() + 1):
-            content = connect('http://api.football-data.org/v2/teams/{}'.format(Team.objects.get(pk=i).external_identifier))
+            content = connector.send_get('teams/{}'.format(Team.objects.get(pk=i).external_identifier))
             people = retriever.retrieve(content)
             for person in people:
                 storer.store(person)
@@ -56,8 +59,9 @@ class Scheduler:
         matches_retriever = MatchesRetriever()
         referee_storer = RefereePersonStorer()
         match_storer = MatchStorer()
+        connector = Connector()
         for i in range(1, Competition.objects.all().count() + 1):
-            content = connect('http://api.football-data.org/v2/competitions/{}/matches/'.format(Competition.objects.get(pk=i).external_identifier))
+            content = connector.send_get('competitions/{}/matches/'.format(Competition.objects.get(pk=i).external_identifier))
             referees = referee_retriever.retrieve(content)
             for referee in referees:
                 referee_storer.store(referee)

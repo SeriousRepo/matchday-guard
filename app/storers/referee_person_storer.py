@@ -1,21 +1,24 @@
-import requests
 import json
 
 from app.storers.storer import Storer
-from app.senders.person_sender import PersonSender
+from app.connectors.matchday.connector import Connector
 from app.models import Person
 
 
 class RefereePersonStorer(Storer):
+    __url_sufix = 'people/'
+    __referees_url_sufix = 'referees/'
+
     def store(self, content):
         if content['role'] != 'referee':
             return
-        sender = PersonSender()
-        json_response = requests.get('https://matchday-server.herokuapp.com/referees/').content
+        referee_connector = Connector(self.__referees_url_sufix)
+        json_response = referee_connector.send_get()
         endpoint_content = json.loads(json_response)
         is_inside_api = self.__is_inside_api(endpoint_content, content)
         if not is_inside_api:
-            response_content = sender.send(content)
+            connector = Connector(self.__url_sufix)
+            response_content = connector.send_post(content)
             content['internal_identifier'] = json.loads(response_content)['id']
         self.__store_to_db(content)
 
